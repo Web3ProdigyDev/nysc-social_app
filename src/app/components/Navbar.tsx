@@ -3,10 +3,10 @@ import MobileMenu from './MobileMenu'
 
 const Navbar = () => {
   return (
-    <div>
+    <div className='h-24 flex items-center justify-between'>
         {/* LEFT */}
       <div className="">
-        <Link href={"/"}>CORPERSJOINT</Link>
+        <Link href={"/"} className='font-bold text-xl text-green-600'>CORPERSJOINT</Link>
       </div>
         {/* CENTER */}
       <div className="hidden"></div>
