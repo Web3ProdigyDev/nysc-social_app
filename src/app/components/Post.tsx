@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Comments from "./Comments";
 
 const Post = () => {
     return (
@@ -35,7 +36,7 @@ const Post = () => {
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero, voluptatum ut. Reiciendis excepturi libero quam aspernatur maiores, quidem ipsam illum nam vitae ducimus, quibusdam veniam repellat laborum est a eligendi.</p>
             </div>
             {/* INTERACTION */}
-            <div className="flex items-center justify-between text-sm mt-4">
+            <div className="flex items-center justify-between text-sm my-4">
                 <div className="flex gap-8">
                     <div className="flex items-center gap-4 bg-slate-100 p-2 rounded-xl">
                         <Image
@@ -80,6 +81,7 @@ const Post = () => {
                     </div>
                 </div>
             </div>
+            <Comments />
         </div >
     );
 };
