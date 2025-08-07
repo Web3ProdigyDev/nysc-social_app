@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { User } from "@/generated/prisma";
 
-const UserMediaCard = ({ userId }: { userId: string }) => {
+const UserMediaCard = ({ user }: { user: User }) => {
   return (
     <div>
       <div>
