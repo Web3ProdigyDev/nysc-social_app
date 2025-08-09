@@ -1,14 +1,12 @@
+"use server";
+
 import { User } from "@/generated/prisma";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
-import UserInfoCardInteraction from "./UserInfoCardInteraction";
 
 const UserInfoCard = async ({ user }: { user: User }) => {
-  console.log('UserInfoCard: Starting execution at', new Date().toISOString());
-  console.log('UserInfoCard: User data', user);
-
   const createdAtDate = new Date(user.createdAt);
   const formattedDate = createdAtDate.toLocaleDateString("en-US", {
     day: "numeric",
@@ -16,42 +14,35 @@ const UserInfoCard = async ({ user }: { user: User }) => {
     year: "numeric",
   });
 
+  const { userId: currentUserId } = auth();
   let isUserBlocked = false;
   let isFollowing = false;
   let isFollowingRequestSent = false;
 
-  const { userId: currentUserId } = await auth(); // Ensure await for async auth()
-  console.log('UserInfoCard: currentUserId from auth()', currentUserId);
-
   if (currentUserId) {
     const blockRes = await prisma.block.findFirst({
       where: {
-        blockedId: currentUserId, // Now guaranteed to be string
-        blockerId: user.id,
+        blockedId: { equals: currentUserId },
+        blockerId: { equals: user.id },
       },
     });
     isUserBlocked = !!blockRes;
-    console.log('UserInfoCard: Block check result', { isUserBlocked, blockedId: currentUserId, blockerId: user.id });
 
     const followRes = await prisma.follower.findFirst({
       where: {
-        followerId: currentUserId,
-        followingId: user.id,
+        followerId: { equals: currentUserId },
+        followingId: { equals: user.id },
       },
     });
     isFollowing = !!followRes;
-    console.log('UserInfoCard: Follow check result', { isFollowing, followerId: currentUserId, followingId: user.id });
 
     const followReqRes = await prisma.followRequest.findFirst({
       where: {
-        senderId: currentUserId,
-        receiverId: user.id,
+        senderId: { equals: currentUserId },
+        receiverId: { equals: user.id },
       },
     });
     isFollowingRequestSent = !!followReqRes;
-    console.log('UserInfoCard: Follow request check result', { isFollowingRequestSent, senderId: currentUserId, receiverId: user.id });
-  } else {
-    console.log('UserInfoCard: No currentUserId, skipping block/follow checks');
   }
 
   return (
@@ -68,9 +59,7 @@ const UserInfoCard = async ({ user }: { user: User }) => {
         <div className="flex flex-col gap-4 text-gray-500">
           <div className="flex items-center gap-2">
             <span className="text-xl text-black">
-              {(user.name && user.surname
-                ? user.name + " " + user.surname
-                : user.username)}
+              {(user.name && user.surname) ? `${user.name} ${user.surname}` : user.username}
             </span>
             <span className="text-sm">@{user.username}</span>
           </div>
@@ -113,12 +102,6 @@ const UserInfoCard = async ({ user }: { user: User }) => {
               <span>Joined {formattedDate}</span>
             </div>
           </div>
-          <UserInfoCardInteraction 
-          userId={user.id} 
-          currentUserId={currentUserId} 
-          isUserBlocked={isUserBlocked} 
-          isFollowing={isFollowing} 
-          isFollowingRequestSent={isFollowingRequestSent}/>
         </div>
       </div>
     </div>

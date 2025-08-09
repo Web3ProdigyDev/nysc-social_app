@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const ProfileCard = async () => {
 
-  const {userId} = auth()
+  const {userId} = auth();
 
   if(!userId) return null;
 

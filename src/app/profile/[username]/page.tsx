@@ -78,7 +78,9 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
                 className="w-32 h-32 rounded-full absolute left-1/2 -translate-x-1/2 -bottom-16 ring-4 ring-white object-cover"
               />
             </div>
-            <h1 className="mt-20 mb-4 text-2xl font-medium">Sienna Hill</h1>
+            <h1 className="mt-20 mb-4 text-2xl font-medium">
+              {user.name || user.username} {user.surname || ""}
+            </h1>
             <div className="flex items-center justify-center gap-12 mb-4">
               <div className="flex flex-col items-center">
                 <span className="font-medium">{user._count.posts}</span>
