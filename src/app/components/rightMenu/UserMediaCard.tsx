@@ -1,11 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { User } from "@/generated/prisma";
+import prisma from "@/lib/client";
 
-const UserMediaCard = ({ user }: { user: User }) => {
+const UserMediaCard = async ({ user }: { user: User }) => {
+
+  const postsWithMedia = await prisma.post.findMany({
+    where: {
+      userId: user.id,
+      img: { not: null },
+    },
+    take: 8,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  
   return (
-    <div>
-      <div>
         <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4">
           {/* TOP */}
           <div className="flex justify-between items-center font-medium">
@@ -16,75 +27,21 @@ const UserMediaCard = ({ user }: { user: User }) => {
           </div>
           {/* BOTTOM */}
           <div className="flex gap-4 justify-between flex-wrap">
-            <div className="relative w-1/5 h-24">
+            { postsWithMedia.length ? postsWithMedia.map(post =>(
+              <div className="relative w-1/5 h-24" key={post.id}>
               <Image
-                src="https://images.pexels.com/photos/33123984/pexels-photo-33123984.jpeg"
+                src={post.img!}
                 alt=""
                 fill
                 className="object-cover rounded-md"
-              />
+                />
             </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/33151108/pexels-photo-33151108.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/31972432/pexels-photo-31972432.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/33123984/pexels-photo-33123984.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/33151108/pexels-photo-33151108.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/31972432/pexels-photo-31972432.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/33151108/pexels-photo-33151108.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
-            <div className="relative w-1/5 h-24">
-              <Image
-                src="https://images.pexels.com/photos/31972432/pexels-photo-31972432.jpeg"
-                alt=""
-                fill
-                className="object-cover rounded-md"
-              />
-            </div>
+              ))
+              : "No Media Found" }
+            
           </div>
-        </div>
-      </div>
     </div>
   );
 };
 
-export default UserMediaCard;
+export default UserMediaCard; 
