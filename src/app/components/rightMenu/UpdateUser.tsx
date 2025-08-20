@@ -1,7 +1,7 @@
 "use client";
 
 import { updateProfile } from "@/lib/actions";
-import { FollowRequest, User } from "@/generated/prisma"
+import { User } from "@/generated/prisma";
 import Image from "next/image";
 import { useActionState, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
